@@ -1,6 +1,7 @@
 package com.market.api.controller;
 
 import com.market.api.entity.Review;
+import com.market.api.exception.ReviewNotFoundException;
 import com.market.api.service.IReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{id}")
-    public ResponseEntity<Review> getReview(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity<Review> getReview(@PathVariable(name = "id") Long id) throws ReviewNotFoundException {
         Review review = reviewService.getReview(id);
         return new ResponseEntity<>(review, HttpStatus.OK);
     }
@@ -36,8 +36,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/reviews/{id}")
-    public ResponseEntity deleteReview(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity deleteReview(@PathVariable(name = "id") Long id) throws ReviewNotFoundException {
         reviewService.deleteReviewById(id);
         return ResponseEntity.noContent().build();
     }

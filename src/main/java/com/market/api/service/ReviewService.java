@@ -1,6 +1,7 @@
 package com.market.api.service;
 
 import com.market.api.entity.Review;
+import com.market.api.exception.ReviewNotFoundException;
 import com.market.api.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ReviewService implements IReviewService{
     }
 
     @Override
-    public Review getReview(Long id) {
+    public Review getReview(Long id) throws ReviewNotFoundException {
         Optional<Review> targetReview = reviewRepository.findById(id);
 
         if( targetReview.isPresent() )
@@ -29,10 +30,7 @@ public class ReviewService implements IReviewService{
         }
         else
         {
-            /**
-             * Here ReviewNotFoundException should be thrown
-             */
-            return null;
+            throw new ReviewNotFoundException("Review [" + id + "] doesn't exist.");
         }
     }
 
@@ -42,28 +40,17 @@ public class ReviewService implements IReviewService{
     }
 
     @Override
-    public void deleteReviewById(Long id) {
+    public void deleteReviewById(Long id) throws ReviewNotFoundException {
         Optional<Review> targetReview = reviewRepository.findById(id);
 
         if( targetReview.isPresent() )
         {
             Review review = targetReview.get();
             reviewRepository.delete(review);
-            Optional<Review> deletedUser = reviewRepository.findById(id);
-
-            if( deletedUser.isPresent() )
-            {
-                /**
-                 * deleting went wrong -> also any exception should be thrown HTTP - 500
-                 */
-            }
-
-        }
+                   }
         else
         {
-            /**
-             * here we need to throw an exception "ReviewNotFoundException" HTTP - 404;
-             */
+           throw new ReviewNotFoundException("Review [" + id + "] doesn't exist.");
         }
     }
 

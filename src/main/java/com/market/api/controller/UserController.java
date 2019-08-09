@@ -1,6 +1,7 @@
 package com.market.api.controller;
 
 import com.market.api.entity.User;
+import com.market.api.exception.UserNotFoundException;
 import com.market.api.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity<User> getUser(@PathVariable(name = "id") Long id) throws UserNotFoundException {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -37,8 +37,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity deleteUser(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity deleteUser(@PathVariable(name = "id") Long id) throws UserNotFoundException {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }

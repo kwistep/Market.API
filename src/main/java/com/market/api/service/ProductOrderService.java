@@ -1,6 +1,7 @@
 package com.market.api.service;
 
 import com.market.api.entity.ProductOrder;
+import com.market.api.exception.ProductOrderNotFoundException;
 import com.market.api.repository.ProductOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ProductOrderService implements IProductOrderService {
     }
 
     @Override
-    public ProductOrder getProductOrder(Long id) {
+    public ProductOrder getProductOrder(Long id) throws ProductOrderNotFoundException {
         Optional<ProductOrder> targetProductOrder = productOrderRepository.findById(id);
 
         if( targetProductOrder.isPresent() )
@@ -30,10 +31,7 @@ public class ProductOrderService implements IProductOrderService {
         }
         else
         {
-            /**
-             * Here ProductOrderNotFoundException should be thrown
-             */
-            return null;
+            throw new ProductOrderNotFoundException("Product order [" + id + "] doesn't exist.");
         }
     }
 
@@ -43,7 +41,7 @@ public class ProductOrderService implements IProductOrderService {
     }
 
     @Override
-    public void deleteProductOrderById(Long id) {
+    public void deleteProductOrderById(Long id) throws ProductOrderNotFoundException {
 
         Optional<ProductOrder> targetProductOrder = productOrderRepository.findById(id);
 
@@ -51,21 +49,10 @@ public class ProductOrderService implements IProductOrderService {
         {
             ProductOrder productOrder = targetProductOrder.get();
             productOrderRepository.delete(productOrder);
-            Optional<ProductOrder> deletedProductOrder = productOrderRepository.findById(id);
-
-            if( deletedProductOrder.isPresent() )
-            {
-                /**
-                 * deleting went wrong -> also any exception should be thrown HTTP - 500
-                 */
-            }
-
         }
         else
         {
-            /**
-             * here we need to throw an exception "ReviewNotFoundException" HTTP - 404;
-             */
+           throw new ProductOrderNotFoundException("Product order [" + id + "] doesn't exist.");
         }
 
 

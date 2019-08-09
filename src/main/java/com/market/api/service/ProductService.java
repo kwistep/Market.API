@@ -1,6 +1,7 @@
 package com.market.api.service;
 
 import com.market.api.entity.Product;
+import com.market.api.exception.ProductNotFoundException;
 import com.market.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Product getProduct(Long id) {
+    public Product getProduct(Long id) throws ProductNotFoundException {
         Optional<Product> targetProduct = productRepository.findById(id);
 
         if( targetProduct.isPresent() )
@@ -29,10 +30,7 @@ public class ProductService implements IProductService{
         }
         else
         {
-            /**
-             * Here ProductNotFoundException should be thrown
-             */
-            return null;
+            throw new ProductNotFoundException("Product [" + id + "] doesn't exist.");
         }
     }
 
@@ -42,28 +40,17 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void deleteProductById(Long id) {
+    public void deleteProductById(Long id) throws ProductNotFoundException {
         Optional<Product> targetProduct = productRepository.findById(id);
 
         if( targetProduct.isPresent() )
         {
             Product product = targetProduct.get();
             productRepository.delete(product);
-            Optional<Product> deletedProduct = productRepository.findById(id);
-
-            if( deletedProduct.isPresent() )
-            {
-                /**
-                 * deleting went wrong -> also any exception should be thrown HTTP - 500
-                 */
-            }
-
         }
         else
         {
-            /**
-             * here we need to throw an exception "ReviewNotFoundException" HTTP - 404;
-             */
+            throw new ProductNotFoundException("Product [" + id + "] doesn't exist.");
         }
     }
 

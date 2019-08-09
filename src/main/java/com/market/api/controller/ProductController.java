@@ -1,6 +1,7 @@
 package com.market.api.controller;
 
 import com.market.api.entity.Product;
+import com.market.api.exception.ProductNotFoundException;
 import com.market.api.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id) throws ProductNotFoundException {
         Product product = productService.getProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
@@ -36,8 +36,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity deleteProduct(@PathVariable(name = "id") Long id)
-    {
+    public ResponseEntity deleteProduct(@PathVariable(name = "id") Long id) throws ProductNotFoundException {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,7 @@
 package com.market.api.service;
 
 import com.market.api.entity.User;
+import com.market.api.exception.UserNotFoundException;
 import com.market.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(Long id) throws UserNotFoundException {
         Optional<User> targetUser = userRepository.findById(id);
 
         if( targetUser.isPresent() )
@@ -30,10 +31,7 @@ public class UserService implements IUserService {
         }
         else
         {
-            /**
-             * Here UserNotFoundException should be thrown
-             */
-            return null;
+            throw new UserNotFoundException("User [" + id + "] doesn't exist.");
         }
     }
 
@@ -43,7 +41,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Long id) throws UserNotFoundException {
 
         Optional<User> targetUser = userRepository.findById(id);
 
@@ -51,21 +49,10 @@ public class UserService implements IUserService {
         {
             User user = targetUser.get();
             userRepository.delete(user);
-            Optional<User> deletedUser = userRepository.findById(id);
-
-            if( deletedUser.isPresent() )
-            {
-                /**
-                 * deleting went wrong -> also any exception should be thrown HTTP - 500
-                 */
-            }
-
         }
         else
         {
-            /**
-             * here we need to throw an exception "UserNotFoundException" HTTP - 404;
-             */
+           throw new UserNotFoundException("User [" + id + "] doesn't exist.");
         }
 
     }
