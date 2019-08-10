@@ -35,21 +35,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(responseModelNotFoundException, HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(BindException.class)
-//    protected ResponseEntity<ResponseModelBindException> handleBindException(BindException ex)
-//    {
-//
-//        ResponseModelBindException model = new ResponseModelBindException();
-//
-//        for (FieldError fieldError : ex.getFieldErrors() )
-//        {
-//            model.addErrorDetails(fieldError.getField(), fieldError.getDefaultMessage());
-//        }
-//
-//        return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-//
-//    }
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
