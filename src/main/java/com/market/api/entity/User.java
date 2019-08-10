@@ -11,7 +11,6 @@ public class User {
 
     @Id
     @GeneratedValue
-    @Null(message = "UserId mustn't be set.")
     @Column(name = "userId")
     private Long userId;
 
@@ -38,7 +37,7 @@ public class User {
     private String phoneNumber;
 
 //    TODO check how it works
-    @Email(message = "Email should be valid!")
+    @Email(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email should be valid!")
     @Column(name = "email")
     private String email;
 
@@ -51,7 +50,7 @@ public class User {
     @Column(name = "rating")
     private Double rating;
 
-    @PastOrPresent(message = "Registration time cannot be future.")
+    @PastOrPresent(message = "Registration date cannot be future.")
     @Column(name = "registered")
     private LocalDateTime registered;
 
@@ -82,6 +81,12 @@ public class User {
         this.ratingCount = ratingCount;
         this.rating = rating;
         this.registered = registered;
+    }
+
+    @PrePersist
+    void prePersist()
+    {
+        this.registered = LocalDateTime.now();
     }
 
     public Long getUserId() {
@@ -163,7 +168,6 @@ public class User {
     public void setRegistered(LocalDateTime registered) {
         this.registered = registered;
     }
-
 
     @Override
     public boolean equals(Object o) {

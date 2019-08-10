@@ -3,6 +3,10 @@ package com.market.api.entity;
 import com.market.api.entity.util.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.Objects;
 
 @Entity(name = "Review")
@@ -13,18 +17,23 @@ public class Review {
     @Column(name = "reviewId")
     private Long reviewId;
 
+    @NotNull(message = "The field cannot be empty.")
     @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 
+    @NotNull(message = "The field cannot be empty.")
     @ManyToOne(fetch = FetchType.EAGER)
     private User attachedTo;
 
+    @DecimalMin(value = "0.0")
+    @DecimalMax(value = "5.0")
     @Column(name = "ratingValue")
     private Integer ratingValue;
 
     @Column(name = "description")
     private String description;
 
+    @Null(message = "Status mustn't be set.")
     @Column(name = "status", length = 9)
     @Enumerated(EnumType.STRING)
     private Status status;

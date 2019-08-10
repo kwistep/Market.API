@@ -4,6 +4,7 @@ import com.market.api.entity.util.ProductCondition;
 import com.market.api.entity.util.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -13,15 +14,20 @@ public class Product {
     @Id
     @GeneratedValue
     @Column(name = "productId")
+//    @Null(message = "Product id mustn't be set.")
     private Long productId;
 
     @Column(name = "title")
+    @NotBlank(message = "The title mustn't be empty.")
     private String title;
 
     @Column(name = "regularPrice")
+    @DecimalMin(value = "0.0")
+    @NotNull
     private BigDecimal regularPrice;
 
     @Column(name = "initialPrice")
+    @DecimalMin(value = "0.0")
     private BigDecimal initialPrice;
 
     @Column(name = "description")
@@ -32,13 +38,17 @@ public class Product {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "productCondition", length = 4)
+    @NotNull
     private ProductCondition productCondition;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 9)
+    @Null(message = "The value mustn't be set.")
     private Status status;
 
     @Column(name = "stock")
+    @Min(value = 0)
+    @NotNull(message = "Set the stock of the product.")
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -63,6 +73,17 @@ public class Product {
         this.seller = seller;
         this.buyer = buyer;
     }
+
+//    @PrePersist
+//    public void prePersist()
+//    {
+//        if(StringUtils.isBlank(this.color))
+//        {
+//            this.color = "None";
+//        }
+//
+//        if( SU. )
+//    }
 
     public Long getProductId() {
         return productId;

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class ReviewController {
     }
 
     @PostMapping("/reviews")
-    public ResponseEntity<Review> addReview(@RequestBody Review review)
+    public ResponseEntity<Review> addReview(@Valid @RequestBody Review review)
     {
         Review savedReview = reviewService.addReview(review);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
@@ -42,7 +43,7 @@ public class ReviewController {
     }
 
     @PutMapping("/reviews/{id}")
-    public ResponseEntity<Review> updateReview(@RequestBody Review review, @PathVariable(name = "id") Long id)
+    public ResponseEntity<Review> updateReview(@Valid @RequestBody Review review, @PathVariable(name = "id") Long id)
     {
         Review updatedReview = reviewService.updateReview(review, id);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
