@@ -1,8 +1,7 @@
 package com.market.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -12,35 +11,50 @@ public class User {
 
     @Id
     @GeneratedValue
+    @Null(message = "UserId mustn't be set.")
     @Column(name = "userId")
     private Long userId;
 
+    @NotBlank(message = "Login cannot be empty.")
     @Column(name = "login")
     private String login;
 
+    @NotBlank(message = "Password cannot be empty.")
     @Column(name = "password")
     private String password;
 
+    @NotBlank(message = "First name cannot be empty.")
     @Column(name = "firstName")
     private String firstName;
 
+    @NotBlank(message = "Surname cannot be empty.")
     @Column(name = "surname")
     private String surname;
 
+    //TODO create the pattern
+//    @Pattern()
+    @NotBlank(message = "Phone number cannot be empty.")
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
+//    TODO check how it works
+    @Email(message = "Email should be valid!")
     @Column(name = "email")
     private String email;
 
+    @Min(value = 0, message = "Rating count cannot be less than 0.")
+    @Max(value = 2_147_483_647, message = "Rating count cannot be more than 2147483647.")
     @Column(name = "ratingCount")
     private Integer ratingCount;
 
+    @DecimalMin(value = "0.0", message = "Rating cannot be less than 0.0")
     @Column(name = "rating")
     private Double rating;
 
+    @PastOrPresent(message = "Registration time cannot be future.")
     @Column(name = "registered")
     private LocalDateTime registered;
+
 
     @OneToMany(mappedBy = "attachedTo")
     private List<Review> reviews;
