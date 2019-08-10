@@ -1,12 +1,12 @@
 package com.market.api.entity;
 
 import com.market.api.entity.util.Status;
+import com.market.api.exception.validation.StatusCheck;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.Objects;
 
 @Entity(name = "Review")
@@ -33,15 +33,14 @@ public class Review {
     @Column(name = "description")
     private String description;
 
-    @Null(message = "Status mustn't be set.")
-    @Column(name = "status", length = 9)
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    @Column(name = "status")
+    @StatusCheck(value = {Status.NEW, Status.PUBLISHED})
+    private String status;
 
     public Review() {
     }
 
-    public Review(Long reviewId, User createdBy, User attachedTo, Integer ratingValue, String description, Status status) {
+    public Review(Long reviewId, User createdBy, User attachedTo, Integer ratingValue, String description, String status) {
         this.reviewId = reviewId;
         this.createdBy = createdBy;
         this.attachedTo = attachedTo;
@@ -90,11 +89,11 @@ public class Review {
         this.description = description;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

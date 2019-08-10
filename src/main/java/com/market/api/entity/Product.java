@@ -2,9 +2,14 @@ package com.market.api.entity;
 
 import com.market.api.entity.util.ProductCondition;
 import com.market.api.entity.util.Status;
+import com.market.api.exception.validation.StatusCheck;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -41,10 +46,9 @@ public class Product {
     @NotNull
     private ProductCondition productCondition;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 9)
-    @Null(message = "The value mustn't be set.")
-    private Status status;
+    @Column(name = "status")
+    @StatusCheck(value = {Status.NEW, Status.PUBLISHED}, message = "Status may have only two values: NEW and PUBLISHED.")
+    private String status;
 
     @Column(name = "stock")
     @Min(value = 0)
@@ -60,7 +64,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long productId, String title, BigDecimal regularPrice, BigDecimal initialPrice, String description, String color, ProductCondition productCondition, Status status, Integer stock, User seller, User buyer) {
+    public Product(Long productId, String title, BigDecimal regularPrice, BigDecimal initialPrice, String description, String color, ProductCondition productCondition, String status, Integer stock, User seller, User buyer) {
         this.productId = productId;
         this.title = title;
         this.regularPrice = regularPrice;
@@ -74,16 +78,15 @@ public class Product {
         this.buyer = buyer;
     }
 
-//    @PrePersist
-//    public void prePersist()
-//    {
-//        if(StringUtils.isBlank(this.color))
-//        {
-//            this.color = "None";
-//        }
-//
-//        if( SU. )
-//    }
+    @PrePersist
+    public void prePersist()
+    {
+        if(StringUtils.isBlank(this.color))
+        {
+            this.color = "None";
+        }
+
+    }
 
     public Long getProductId() {
         return productId;
@@ -141,11 +144,11 @@ public class Product {
         this.productCondition = productCondition;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
