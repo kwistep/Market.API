@@ -1,8 +1,7 @@
 package com.market.api.entity;
 
 import com.market.api.entity.util.ProductCondition;
-import com.market.api.entity.util.Status;
-import com.market.api.exception.validation.StatusCheck;
+import com.market.api.validation.ProdCondition;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -19,7 +18,6 @@ public class Product {
     @Id
     @GeneratedValue
     @Column(name = "productId")
-//    @Null(message = "Product id mustn't be set.")
     private Long productId;
 
     @Column(name = "title")
@@ -41,13 +39,13 @@ public class Product {
     @Column(name = "color")
     private String color;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "productCondition", length = 4)
-    @NotNull
+    @Column(name = "productCondition")
+    @ProdCondition(value = {ProductCondition.NEW, ProductCondition.USED},
+        message = "Product condition may have only two values: NEW and USED.")
     private ProductCondition productCondition;
 
     @Column(name = "status")
-    @StatusCheck(value = {Status.NEW, Status.PUBLISHED}, message = "Status may have only two values: NEW and PUBLISHED.")
+//    @StatusCheck(value = {Status.NEW, Status.PUBLISHED}, message = "Status may have only two values: NEW and PUBLISHED.")
     private String status;
 
     @Column(name = "stock")

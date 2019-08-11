@@ -1,7 +1,10 @@
 package com.market.api.service;
 
 import com.market.api.entity.Review;
+import com.market.api.entity.User;
+import com.market.api.entity.util.Status;
 import com.market.api.exception.ReviewNotFoundException;
+import com.market.api.exception.UserNotFoundException;
 import com.market.api.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,9 @@ public class ReviewService implements IReviewService{
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private IUserService userService;
 
     @Override
     public List<Review> getAllReviews() {
@@ -35,7 +41,10 @@ public class ReviewService implements IReviewService{
     }
 
     @Override
-    public Review addReview(Review review) {
+    public Review addReview(Review review, Long userId) throws UserNotFoundException {
+        User currentUser = userService.getUser(userId);
+        review.setCreatedBy(currentUser);
+        review.setStatus(Status.NEW.getStatus());
         return reviewRepository.save(review);
     }
 
@@ -58,5 +67,20 @@ public class ReviewService implements IReviewService{
     public Review updateReview(Review review, Long id) {
         review.setReviewId(id);
         return reviewRepository.save(review);
+    }
+
+    public void publishReview(Long id) throws ReviewNotFoundException {
+        Optional<Review> targerReview = reviewRepository.findById(id);
+
+        if( targerReview.isPresent() )
+        {
+            Review review = targerReview.get();
+            review.setStatus(Status.PUBLISHED.getStatus());
+            reviewRepository.save(review);
+        }
+        else
+        {
+            throw new ReviewNotFoundException("Review [" + id + "] doesn't exist.");
+        }
     }
 }

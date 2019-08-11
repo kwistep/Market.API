@@ -1,7 +1,7 @@
 package com.market.api.entity;
 
 import com.market.api.entity.util.Status;
-import com.market.api.exception.validation.StatusCheck;
+import com.market.api.validation.StatusCheck;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
@@ -17,7 +17,6 @@ public class Review {
     @Column(name = "reviewId")
     private Long reviewId;
 
-    @NotNull(message = "The field cannot be empty.")
     @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 

@@ -1,4 +1,4 @@
-package com.market.api.exception.validation;
+package com.market.api.validation;
 
 import com.market.api.entity.util.Status;
 
@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface StatusCheck {
 
-    String message() default "{com.market.api.exception.validation." +
+    String message() default "{com.market.api.validation." +
             "message}";
 
     Class<?>[] groups() default { };

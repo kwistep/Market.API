@@ -38,6 +38,7 @@ public class User {
 
 //    TODO check how it works
     @Email(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email should be valid!")
+    @NotBlank(message = "Email should be valid!")
     @Column(name = "email")
     private String email;
 
@@ -47,6 +48,7 @@ public class User {
     private Integer ratingCount;
 
     @DecimalMin(value = "0.0", message = "Rating cannot be less than 0.0")
+    @DecimalMax(value = "5.0", message = "Rating cannot be more than 5.0")
     @Column(name = "rating")
     private Double rating;
 
@@ -87,6 +89,17 @@ public class User {
     void prePersist()
     {
         this.registered = LocalDateTime.now();
+
+        Double sum = 0.0d;
+        Integer count = 0;
+
+        for (Review review: this.reviews) {
+            sum += review.getRatingValue();
+            count++;
+        }
+
+        this.rating = sum / count;
+        this.ratingCount = count;
     }
 
     public Long getUserId() {

@@ -2,6 +2,7 @@ package com.market.api.controller;
 
 import com.market.api.entity.Review;
 import com.market.api.exception.ReviewNotFoundException;
+import com.market.api.exception.UserNotFoundException;
 import com.market.api.service.IReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,10 @@ public class ReviewController {
         return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
-    @PostMapping("/reviews")
-    public ResponseEntity<Review> addReview(@Valid @RequestBody Review review)
-    {
-        Review savedReview = reviewService.addReview(review);
+    @PostMapping("/users/{id}/reviews")
+    public ResponseEntity<Review> addReview(@PathVariable(name = "id") Long id,
+                                            @Valid @RequestBody Review review) throws UserNotFoundException {
+        Review savedReview = reviewService.addReview(review, id);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
 
@@ -47,6 +48,12 @@ public class ReviewController {
     {
         Review updatedReview = reviewService.updateReview(review, id);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
+    }
+
+    @PutMapping("/reviews/{id}/publish")
+    public ResponseEntity publishReview(@PathVariable(name = "id") Long id) throws ReviewNotFoundException {
+       reviewService.publishReview(id);
+       return ResponseEntity.noContent().build();
     }
 
 }

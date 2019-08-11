@@ -1,4 +1,4 @@
-package com.market.api.exception.validation;
+package com.market.api.validation;
 
 import com.market.api.entity.util.Status;
 import org.apache.commons.lang3.StringUtils;

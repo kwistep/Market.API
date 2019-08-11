@@ -1,11 +1,10 @@
 package com.market.api.controller;
 
 import com.market.api.entity.Product;
-import com.market.api.entity.User;
+import com.market.api.exception.ProductHasAlreadyBeenPublished;
 import com.market.api.exception.ProductNotFoundException;
 import com.market.api.exception.UserNotFoundException;
 import com.market.api.service.IProductService;
-import com.market.api.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,6 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-    @Autowired
-    private IUserService userService;
-
     @GetMapping("/products")
     public List<Product> getAllProducts()
     {
@@ -36,12 +32,16 @@ public class ProductController {
     }
 
     @PostMapping("/users/{id}/products")
-    public ResponseEntity<Product> addProduct(@PathVariable(name = "id") Long id,
+    public ResponseEntity<Product> addProduct(@PathVariable(name = "id") Long userId,
                                               @Valid @RequestBody Product product) throws UserNotFoundException {
-        User seller = userService.getUser(id);
-        product.setSeller(seller);
-        Product savedProduct = productService.addProduct(product);
+        Product savedProduct = productService.addProduct(product, userId);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/products/{id}/publish")
+    public ResponseEntity publishProduct(@PathVariable(name = "id") Long id) throws ProductNotFoundException, ProductHasAlreadyBeenPublished {
+        productService.publishProduct(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/products/{id}")
