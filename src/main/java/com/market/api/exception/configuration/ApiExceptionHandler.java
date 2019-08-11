@@ -1,10 +1,8 @@
 package com.market.api.exception.configuration;
 
-import com.market.api.exception.ProductNotFoundException;
-import com.market.api.exception.ProductOrderNotFoundException;
-import com.market.api.exception.ReviewNotFoundException;
-import com.market.api.exception.UserNotFoundException;
+import com.market.api.exception.*;
 import com.market.api.exception.responsemodel.ResponseModelBindException;
+import com.market.api.exception.responsemodel.ResponseModelHasBeenPublished;
 import com.market.api.exception.responsemodel.ResponseModelNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
         ResponseModelNotFoundException responseModelNotFoundException = new ResponseModelNotFoundException(ex.getMessage(), LocalDateTime.now(), uri);
         return new ResponseEntity<>(responseModelNotFoundException, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductHasAlreadyBeenPublished.class)
+    protected ResponseEntity<ResponseModelHasBeenPublished> handlePublishingConflict(Exception ex) {
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        ResponseModelHasBeenPublished responseModelHasBeenPublished = new ResponseModelHasBeenPublished(ex.getMessage(), LocalDateTime.now(), uri);
+        return new ResponseEntity<>(responseModelHasBeenPublished, HttpStatus.BAD_REQUEST);
     }
 
 
