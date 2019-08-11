@@ -42,7 +42,7 @@ public class Product {
     @Column(name = "productCondition")
     @ProdCondition(value = {ProductCondition.NEW, ProductCondition.USED},
         message = "Product condition may have only two values: NEW and USED.")
-    private ProductCondition productCondition;
+    private String productCondition;
 
     @Column(name = "status")
 //    @StatusCheck(value = {Status.NEW, Status.PUBLISHED}, message = "Status may have only two values: NEW and PUBLISHED.")
@@ -62,7 +62,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long productId, String title, BigDecimal regularPrice, BigDecimal initialPrice, String description, String color, ProductCondition productCondition, String status, Integer stock, User seller, User buyer) {
+    public Product(Long productId, String title, BigDecimal regularPrice, BigDecimal initialPrice, String description, String color, String productCondition, String status, Integer stock, User seller, User buyer) {
         this.productId = productId;
         this.title = title;
         this.regularPrice = regularPrice;
@@ -134,11 +134,11 @@ public class Product {
         this.color = color;
     }
 
-    public ProductCondition getProductCondition() {
+    public String getProductCondition() {
         return productCondition;
     }
 
-    public void setProductCondition(ProductCondition productCondition) {
+    public void setProductCondition(String productCondition) {
         this.productCondition = productCondition;
     }
 

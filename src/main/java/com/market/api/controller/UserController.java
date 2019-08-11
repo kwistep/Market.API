@@ -1,6 +1,7 @@
 package com.market.api.controller;
 
 import com.market.api.entity.User;
+import com.market.api.exception.UserAlreadyExists;
 import com.market.api.exception.UserNotFoundException;
 import com.market.api.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user)
-    {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws UserAlreadyExists {
         User savedUser = userService.addUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }

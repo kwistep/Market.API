@@ -1,6 +1,7 @@
 package com.market.api.service;
 
 import com.market.api.entity.User;
+import com.market.api.exception.UserAlreadyExists;
 import com.market.api.exception.UserNotFoundException;
 import com.market.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User addUser(User user) {
-        return userRepository.save(user);
+    public User addUser(User user) throws UserAlreadyExists {
+
+        String email = user.getEmail();
+        String login = user.getLogin();
+
+        Optional<User> userByCurrentCredentials = userRepository.findByLoginOrEmail(login, email);
+
+        if( !userByCurrentCredentials.isPresent() )
+        {
+            return userRepository.save(user);
+        }
+        else
+        {
+            throw new UserAlreadyExists("User with these credentials (both or one of them) already exists.", login, email);
+        }
+
     }
 
     @Override

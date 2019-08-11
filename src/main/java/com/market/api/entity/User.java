@@ -37,8 +37,8 @@ public class User {
     private String phoneNumber;
 
 //    TODO check how it works
-    @Email(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email should be valid!")
-    @NotBlank(message = "Email should be valid!")
+//    @Email(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email should be valid!")
+//    @NotBlank(message = "Email should be valid!")
     @Column(name = "email")
     private String email;
 

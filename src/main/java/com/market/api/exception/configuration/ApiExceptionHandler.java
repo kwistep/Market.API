@@ -4,6 +4,7 @@ import com.market.api.exception.*;
 import com.market.api.exception.responsemodel.ResponseModelBindException;
 import com.market.api.exception.responsemodel.ResponseModelHasBeenPublished;
 import com.market.api.exception.responsemodel.ResponseModelNotFoundException;
+import com.market.api.exception.responsemodel.ResponseModelUserAlreadyExists;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -38,6 +41,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
         ResponseModelHasBeenPublished responseModelHasBeenPublished = new ResponseModelHasBeenPublished(ex.getMessage(), LocalDateTime.now(), uri);
         return new ResponseEntity<>(responseModelHasBeenPublished, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyExists.class)
+    protected ResponseEntity<ResponseModelUserAlreadyExists> handleBadCredentials(UserAlreadyExists ex)
+    {
+        Map<String, String> credentials = new HashMap<>();
+        credentials.put("login", ex.getLogin());
+        credentials.put("email", ex.getEmail());
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        ResponseModelUserAlreadyExists userAlreadyExists = new ResponseModelUserAlreadyExists(ex.getMessage(),
+                LocalDateTime.now(), uri, credentials);
+        return new ResponseEntity<>(userAlreadyExists, HttpStatus.BAD_REQUEST);
     }
 
 
